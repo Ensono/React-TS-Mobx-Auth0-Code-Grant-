@@ -33,12 +33,12 @@ export class ProtectedRoute extends Component<ProtectedRouteProps> {
         const { user, redirectToPage } = this.store.auth
         const { push } = this.store.routing
         if (user && redirectToPage && !this.redirected) {
+            // deep linking
             this.redirected = true
             push(redirectToPage)
         }
         // tslint:disable-next-line: no-shadowed-variable
         const { component: Component, redirectTo, ...rest } = this.props as any
-        console.debug('deep-linking -> redirect to: ', redirectToPage)
         return (
             <Route
                 {...rest}
