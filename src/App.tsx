@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import { Router, Switch } from 'react-router-dom'
+import { ProtectedRoute } from './containers/ProtectedRoute'
+import { createBrowserHistory, History } from 'history'
+import { Provider } from 'mobx-react'
+import { syncHistoryWithStore } from 'mobx-react-router'
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { Home } from './routes'
+import { stores } from './stores'
+
+class App extends Component {
+    public browserHistory: History
+    public mobxSyncedHistory: any
+    constructor(props: any) {
+        super(props)
+        this.browserHistory = createBrowserHistory()
+        this.mobxSyncedHistory = syncHistoryWithStore(
+            this.browserHistory,
+            stores.routing!
+        )
+    }
+    public render() {
+        return (
+            <Provider {...stores}>
+                <Router history={this.mobxSyncedHistory}>
+                    <Switch>
+                        <ProtectedRoute
+                            path="/"
+                            exact={true}
+                            component={Home}
+                        />
+                    </Switch>
+                </Router>
+            </Provider>
+        )
+    }
 }
 
-export default App;
+export default App

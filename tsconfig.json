@@ -4,9 +4,22 @@
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "esnext",
+      "es5",
+      "es2015",
+      "es2017"
     ],
-    "allowJs": true,
+    "types": [
+      "jest",
+      "node"
+    ],
+    "outDir": "build/dist",
+    "sourceMap": true,
+    "rootDir": "src",
+    "importHelpers": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "allowJs": false,
+    "declaration": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -17,9 +30,27 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "noImplicitAny": true,
+    "noImplicitThis": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": false,
+    "allowUnreachableCode": false,
+    "noUnusedParameters": false,
+    "noUnusedLocals": true,
+    "removeComments": true,
+    "strictNullChecks": true,
+    "alwaysStrict": true,
+    "experimentalDecorators": true,
+    "noLib": false,
+    "downlevelIteration": true
   },
   "include": [
     "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "static",
+    "dist"
   ]
 }

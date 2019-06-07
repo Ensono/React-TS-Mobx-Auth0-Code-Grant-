@@ -1,0 +1,90 @@
+{
+	"plugins": [
+		"prettier"
+	],
+	"extends": [
+		"tslint:recommended",
+		"tslint-config-airbnb",
+		"tslint-react",
+		"tslint-config-prettier"
+	],
+	"rules": {
+		"max-classes-per-file": [true, 3],
+		"indent": [
+			true,
+			"spaces",
+			4
+		],
+		"prefer-array-literal": [true, { "allow-type-parameters": true }],
+		"import-name": false,
+		"variable-name": false,
+		"no-console": false,
+		"no-unused-variable": true,
+		"interface-name": [
+			true,
+			"never-prefix"
+		],
+		"no-empty-interface": false,
+		"no-increment-decrement": false,
+		"object-literal-sort-keys": false,
+		"jsx-no-lambda": false,
+		"ordered-imports": false,
+		"ban-types": false,
+		"semi": false,
+		"semicolon": false,
+		"jsx-alignment": false,
+		"jsx-boolean-value": true,
+		"jsx-curly-spacing": [
+			true,
+			"never"
+		],
+		"jsx-equals-spacing": [
+			true,
+			"never"
+		],
+		"jsx-key": true,
+		"jsx-no-bind": true,
+		"jsx-no-multiline-js": false,
+		"jsx-no-string-ref": true,
+		"jsx-self-close": true,
+		"jsx-wrap-multiline": true,
+		"import/no-extraneous-dependencies": 0,
+		"react/forbid-prop-types": 0,
+		"react/jsx-filename-extension": 0,
+		"react/prefer-stateless-function": 1,
+		"linebreak-style": false,
+		"react/sort-prop-types": [
+			1,
+			{
+				"callbacksLast": false,
+				"ignoreCase": true,
+				"requiredFirst": true,
+				"sortShapeProp": true
+			}
+		],
+		"prettier/prettier": 1
+	},
+	"linterOptions": {
+		"exclude": [
+			"**/*.js",
+			"**/*.test.ts",
+			"**/*.test.tsx",
+			"**/*.jsx",
+			"node_modules/**/*.ts",
+			"**/node_modules /**",
+			"**/coverage /**",
+			"**/release /**",
+			"**/public /**",
+			"**/karma /**",
+			"**/.idea /**v",
+			"**/.git /**",
+			"**/__tests__ /**",
+			"**/bin /**",
+			"**/tmp /**",
+			"**/test /**",
+			"**/config /**",
+			"**/build /**",
+			"**/scripts/**"
+		]
+	}
+}
