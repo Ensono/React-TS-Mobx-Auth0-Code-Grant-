@@ -2,13 +2,13 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## PR Welcome!!
 
-## references: 
+## references:
+
 [OAuth 2.0 Security Best Current Practice
-                  draft-ietf-oauth-security-topics-11](https://tools.ietf.org/html/draft-ietf-oauth-security-topics-11)
+draft-ietf-oauth-security-topics-11](https://tools.ietf.org/html/draft-ietf-oauth-security-topics-11)
 
 [OAuth 2.0 for Browser-Based Apps
-               draft-parecki-oauth-browser-based-apps-02](https://tools.ietf.org/html/draft-parecki-oauth-browser-based-apps-02).
-
+draft-parecki-oauth-browser-based-apps-02](https://tools.ietf.org/html/draft-parecki-oauth-browser-based-apps-02).
 
 # Summary
 
@@ -20,15 +20,13 @@ The new recommendation imposes more requirements on the authorization server, bu
 
 If you are building a new SPA, you should consider implementing the new guidance based on authorization code with PKCE. More details below.
 
-
-
 ## Keeping things in perspective
+
 Some of you might find that the above summary (and this post in general) doesn't convey the urgency and the alarmed tone you might have noticed in other discussions calling for the immediate cessation of any use of the implicit flow in general. That might have given you a bit of cognitive whiplash, considering that the shortcomings of that grant have been known since 2012 and a very large number of SPAs currently in production, including very prominent products widely adopted and being used every day without major disruptions.
 
 Often those discussions feature well-intentioned generalizations, borne out of necessity to keep communications concise and the discussion accessible to the non-initiated. Add to that the fact that, as trusted security experts, we tend to favor the better-safe-than-sorry mantra, and you'll get advice that often lacks nuance. It's a bit like recommending you to always go buy your groceries in a tank: we'll feel confident we gave you advice that will keep you secure, but you are left to figure out how to exchange your Prius for a tank, how to find parking for it, etc… and if you don't live in a war zone, perhaps the actual risk doesn't justify the investment.
 
 The challenge is that when it comes to standards and security, often deciding whether you live in a war zone or not comes down to reading long specs, paying attention to language with lawyer-like focus. In this post we'll try to spare you some of that and equip you with actionable information, so that you can decide for yourself if and when to do your investment. But of course, when in doubt, if you can afford it, a tank is a pretty cool ride.
-
 
 ## If you are using Auth0:
 
@@ -74,10 +72,14 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-
 # Details
 
 ## The Issues
+
+-   `Insufficient redirect URI validation.` If your AS of choice doesn't enforce a strict match between the redirect URI requested at runtime and the one previously registered for your client, for example by accepting URLs containing wildcards, an attacker might redirect the response (containing the token you requested!) to a URL they control and harvest your credentials. Note: Auth0 enforces strict matching by default.
+-   `Credential leakage by referrer header.` Without explicit countermeasures (like setting the Referrer-Policy header), requesting a page right after authentication could leak the access token in the Referer header to whoever controls that page .
+-   `Browser history.` The fragment with the access token may end up in your browser's history, hence exposed to any attack accessing it .
+-   `Token injection.` Say that an attacker manages to modify a response and substitute the token coming from the AS with one stolen from elsewhere, for example a token issued for a completely different user. There's no way to detect this happened when using the implicit grant as described.
 
 ## The Solution
 
@@ -136,7 +138,8 @@ referer: http://localhost:3000/?code=DiXOZqP_t1eX1CVc&state=p1Qaoiy67CA1J7iNRaPs
 
 Please note the code verifier here, to close the PKCE check.
 
-and the Response: 
+and the Response:
+
 ```
 200 HTTP/2.0
 date: Thu, 03 Jan 2019 19:25:58 GMT
@@ -190,10 +193,10 @@ cookie: auth0=s%3AMaLRoS9Q0WdZ2oI5T4sgOxBna16OarTI.pSedvnX9ctZOkcs9lPkXcNfQn3ciU
 
 Things to notice:
 
-- The request looks a lot like the one we observed during the interactive phase, including all the PKCE machinery.
-- One important difference is the prompt=none directive. We want this to happen without any UX.
-- Another fundamental difference is that our request is accompanied by the session cookie, which should prove the user's sign in status without prompts
-- In Auth0 we like web_message as response_mode when communicating with iframes. For the purpose of discussing differences between implicit vs authorization code grants it doesn't make much of a difference.
+-   The request looks a lot like the one we observed during the interactive phase, including all the PKCE machinery.
+-   One important difference is the prompt=none directive. We want this to happen without any UX.
+-   Another fundamental difference is that our request is accompanied by the session cookie, which should prove the user's sign in status without prompts
+-   In Auth0 we like web_message as response_mode when communicating with iframes. For the purpose of discussing differences between implicit vs authorization code grants it doesn't make much of a difference.
 
 The response returns the requested code, delivered via JS as expected. The AS also takes the opportunity to update the session cookie.
 
@@ -208,4 +211,4 @@ From this point onward, the code redemption against the token endpoint plays out
 
 Hopefully this clarified how you can perform background token renewals without requiring a refresh token in JavaScript. That works pretty well, though there's something that kind of ruins the party for me. The mechanism described here still relies on the iframe to be able to access the session cookie. There are various situations where that access might not be granted, as it is the case in Apple's ITP2 (see discussion [here](https://github.com/whatwg/html/issues/3338)). Using a refresh token would make the issue moot, which is why I believe it is worth it to keep an eye on this matter and push for more widespread adoption of the security measures that would make refresh tokens usable from JavaScript. There is an entirely different chapter about what the implications for distributed session termination would be, but this post is long enough as it is already.
 
-This solution is based on [this Auth0 article](https://auth0.com/blog/oauth2-implicit-grant-and-spa/) by [Vittorio Bertocci](https://auth0.com/blog/authors/vittorio-bertocci/) Principal Architect at Auth0 and some snippets of code (mainly the iFrame bit) from [Jose Romaniello](https://www.linkedin.com/in/joseromaniello/?locale=en_US) 
+This solution is based on [this Auth0 article](https://auth0.com/blog/oauth2-implicit-grant-and-spa/) by [Vittorio Bertocci](https://auth0.com/blog/authors/vittorio-bertocci/) Principal Architect at Auth0 and some snippets of code (mainly the iFrame bit) from [Jose Romaniello](https://www.linkedin.com/in/joseromaniello/?locale=en_US)
